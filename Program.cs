@@ -21,7 +21,7 @@ namespace QQMhtToHtml
                 return;
             }
             MHTMLParser parser = new MHTMLParser(mht);
-            List<string[]> nodes = null;
+            List<string[]> nodes;
             try
             {
                Console.WriteLine("Processing data...");
@@ -31,12 +31,16 @@ namespace QQMhtToHtml
             {
                 return;
             }
+            string path = Path.GetDirectoryName(args[0]);
+            string hFile = Path.GetFileNameWithoutExtension(args[0]);
+            string d = $@"{path}\{hFile}_images";
             if (nodes.Count > 0)
             {
                 int c = nodes.Count - 1;
                 if (nodes.Count > 1)
                 {
-                    Directory.CreateDirectory("images");
+                    
+                    Directory.CreateDirectory(d);
                     Console.WriteLine($"{c} image(s) found.");
                 }
                 html = nodes[0][2];
@@ -46,14 +50,12 @@ namespace QQMhtToHtml
                         name = nodes[i][1].Split(".".ToArray())[0];
                     if (ext == "jpeg")
                         ext = "jpg";
-                    string iFile = $@"images\{name}.{ext}";
+                    string iFile = $@"{d}\{name}.{ext}";
                     byte[] bytes = Convert.FromBase64String(nodes[i][2]);
                      File.WriteAllBytes(iFile, bytes);
                     html = html.Replace($"{name}.dat", $@"{iFile}");
                     Console.WriteLine($"Processing image...({i}/{c})");
                 }
-                string path = Path.GetDirectoryName(args[0]);
-                string hFile = Path.GetFileNameWithoutExtension(args[0]);
                 hFile = $@"{path}\{hFile}.html";
                 File.WriteAllText(hFile, html);
                 Console.Write("All done.");
