@@ -1,4 +1,4 @@
 # QQMhtToHtml
 QQMhtToHtml xxx.mht
 
-图片保持在images目录.
+输出"xxx.html"和"images"目录.
